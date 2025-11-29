@@ -1,0 +1,22 @@
+# Backend Dependencies for Dress Image Search System
+# 
+# Core Framework
+fastapi==0.112.0              # REST API framework
+uvicorn[standard]==0.30.1     # ASGI server with performance extras
+python-multipart==0.0.9       # Parse multipart/form-data for file uploads
+pydantic-settings==2.10.1     # Environment variable management (Pydantic v2)
+
+# AI/ML - Local Models (No External APIs)
+sentence-transformers==2.7.0  # CLIP embeddings for images and text
+torch==2.2.2                  # PyTorch backend for transformers
+spacy==3.7.4                  # NLP: tokenization, lemmatization, dependency parsing
+
+# Utilities
+pillow==10.4.0                # Image I/O and processing
+requests==2.32.3              # HTTP client for downloading images
+
+# Notes:
+# - CLIP model (~605MB) auto-downloads on first use
+# - spaCy model installed via: python -m spacy download en_core_web_sm
+# - All AI runs locally; no cloud APIs
+# - SQLite3 included in Python stdlib

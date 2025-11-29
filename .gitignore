@@ -1,0 +1,22 @@
+# Python
+venv/
+*.pyc
+__pycache__/
+backend/dress_search.db
+backend/images/
+
+# Node.js
+frontend/node_modules/
+
+# Build
+frontend/dist/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Misc
+.env

@@ -1,0 +1,6 @@
+{
+  "silhouette": ["A-line", "mermaid", "sheath", "ball gown", "fit-and-flare"],
+  "length": ["mini", "midi", "knee-length", "floor-length"],
+  "sleeve_type": ["sleeveless", "short sleeve", "long sleeve", "off-shoulder"],
+  "color": ["red", "blue", "green", "navy", "black", "white", "pink"]
+}
