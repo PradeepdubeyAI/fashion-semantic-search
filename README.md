@@ -176,24 +176,7 @@ Or use environment variable before running:
 $env:VITE_API_BASE_URL="http://your-backend:8000"; npm run dev
 ```
 
-## Search Pipeline
 
-### Flow
-```
-User Query (natural language)
-    ↓
-spaCy NLP parsing (extract keywords)
-    ↓
-Taxonomy matching (silhouette, length, sleeve_type, color)
-    ↓
-SQLite pre-filter (narrow results by matched attributes)
-    ↓
-CLIP text embedding (512-dim vector for query)
-    ↓
-Cosine similarity ranking (compare against stored dress embeddings)
-    ↓
-Return top N results with filters + similarity scores
-```
 
 ### How It Works
 
