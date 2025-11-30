@@ -181,17 +181,17 @@ $env:VITE_API_BASE_URL="http://your-backend:8000"; npm run dev
 ### Flow
 ```
 User Query (natural language)
-    ↓
+  ↓
 spaCy NLP parsing (extract keywords)
-    ↓
-Taxonomy matching (silhouette, length, sleeve_type, color)
-    ↓
+  ↓
+Taxonomy matching (silhouette, length, sleeve_type, color) with fuzzywuzzy (fuzzy string matching)
+  ↓
 SQLite pre-filter (narrow results by matched attributes)
-    ↓
+  ↓
 CLIP text embedding (512-dim vector for query)
-    ↓
+  ↓
 Cosine similarity ranking (compare against stored dress embeddings)
-    ↓
+  ↓
 Return top N results with filters + similarity scores
 ```
 
@@ -228,6 +228,40 @@ Return top N results with filters + similarity scores
      ]
    }
    ```
+
+  ## Fuzzy Matching: Test & Validation
+
+  This project includes an upgrade to use spaCy + fuzzywuzzy for attribute extraction, which handles synonyms and minor typos in user queries. Use the steps below to validate fuzzy matching locally.
+
+  ### Optional (Performance): Install python-Levenshtein
+  fuzzywuzzy uses Python's SequenceMatcher by default which is slower. To get the best performance, install `python-Levenshtein` in the backend virtual environment:
+
+  ```powershell
+  cd backend
+  .\.venv\Scripts\activate
+  pip install python-Levenshtein
+  ```
+
+  Installing this package removes the `UserWarning: Using slow pure-python SequenceMatcher` message and speeds up fuzzy matching significantly.
+
+  ### Quick Fuzzy Matching Check (new)
+  There is a helper script `backend/test_fuzzy.py` you can run to quickly test how queries are parsed into attributes using fuzzy matching:
+
+  ```powershell
+  cd backend
+  .\.venv\Scripts\activate
+  python test_fuzzy.py
+  ```
+
+  The script prints each sample query and the extracted `filters` dictionary. Use the examples below and try typos (e.g., `ballgown` -> `ball gown`) and synonyms (`dark blue` -> `navy`) to validate behavior.
+
+  ### Suggested Fuzzy Test Queries
+  - `navy long sleeve floor-length dress`  -> `color: navy` etc.
+  - `dark blue maxi`                      -> `color: navy`, `length: floor-length` (synonym)
+  - `red ballgown` (typo)                -> `silhouette: ball gown` (typo handling)
+  - `navy long sleev` (typo)             -> `sleeve_type: long sleeve` (typo handling)
+
+  If the filters match expected labels in `taxonomy.json`, fuzzy matching is working.
 
 ## Testing & Validation
 
@@ -300,6 +334,14 @@ Try these search queries on the UI. Each will extract filters and return ranked 
 | **Port 5173 in use** | Frontend will try 5174, 5175, etc. automatically |
 
 ## Architecture & Design Decisions
+### Why spaCy + fuzzywuzzy?
+
+- **Handles synonyms and typos:** Fuzzy string matching improves attribute extraction from user queries, increasing accuracy for synonyms and misspellings (e.g., "navy" ≈ "dark blue", "maxi" ≈ "floor-length").
+- **Highly accurate:** More robust than exact matching, especially for natural language input.
+- **Easy to tune:** Similarity threshold (default 75) can be adjusted for stricter or looser matching.
+- **Lightweight:** Adds minimal latency and memory overhead.
+
+**Note:** fuzzywuzzy is now required in `requirements.txt`.
 
 ### Why Hybrid Search?
 

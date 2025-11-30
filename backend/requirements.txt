@@ -14,6 +14,7 @@ spacy==3.7.4                  # NLP: tokenization, lemmatization, dependency par
 # Utilities
 pillow==10.4.0                # Image I/O and processing
 requests==2.32.3              # HTTP client for downloading images
+fuzzywuzzy                   # Fuzzy string matching library
 
 # Notes:
 # - CLIP model (~605MB) auto-downloads on first use

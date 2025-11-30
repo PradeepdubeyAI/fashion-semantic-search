@@ -58,17 +58,17 @@ def zero_shot_classify(image: Image.Image) -> Dict[str, str]:
 
 def parse_query_filters(query: str) -> Dict[str, str]:
     """Extract structured attribute hints from a free-text query."""
+    # Fuzzy matching for attribute extraction
+    from fuzzywuzzy import fuzz
     filters: Dict[str, str] = {}
     models = get_models()
     doc = models.nlp(query.lower())
-    haystacks = {
-        " ".join(token.text for token in doc),
-        " ".join(token.lemma_ for token in doc),
-    }
+    haystack = " ".join(token.text for token in doc)
 
     for category, labels in TAXONOMY.items():
         for label in labels:
-            target = label.lower()
-            if any(target in hay for hay in haystacks):
+            score = fuzz.token_set_ratio(haystack, label.lower())
+            if score >= 75:  # threshold, can tune
                 filters[category] = label
+                break
     return filters
